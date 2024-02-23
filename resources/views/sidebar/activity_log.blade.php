@@ -45,7 +45,7 @@
                 <li class="sidebar-item">
                     <a href="{{ route('change/password') }}" class='sidebar-link'>
                         <i class="bi bi-shield-lock"></i>
-                        <span>Chnage Password</span>
+                        <span>Change Password</span>
                     </a>
                 </li>
                 
@@ -66,6 +66,9 @@
                             <li class="submenu-item active">
                                 <a href="{{ route('activity/login/logout') }}">Activity Log</a>
                             </li>
+                            <li class="submenu-item">
+                                <a href="{{ route('staffActivity/log') }}">Staff Audit Log</a>
+                            </li>
                         </ul>
                     </li>
                 @endif
@@ -85,11 +88,11 @@
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-grid-1x2-fill"></i>
-                        <span>View Record</span>
+                        <span>Employee detail </span>
                     </a>
                     <ul class="submenu">
                         <li class="submenu-item">
-                            <a href="{{ route('form/view/detail') }}">View Detail</a>
+                            <a href="{{ route('form/view/detail') }}">Employee detail</a>
                         </li>
                     </ul>
                 </li>
