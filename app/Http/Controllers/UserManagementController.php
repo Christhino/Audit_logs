@@ -29,7 +29,7 @@ class UserManagementController extends Controller
         }
         
     }
-    // view detail 
+    // Employee detail 
     public function viewDetail($id)
     {  
         if (Auth::user()->role_name=='Admin')
@@ -44,12 +44,15 @@ class UserManagementController extends Controller
             return redirect()->route('home');
         }
     }
+
     // use activity log
     public function activityLog()
     {
         $activityLog = DB::table('user_activity_logs')->get();
         return view('usermanagement.user_activity_log',compact('activityLog'));
     }
+    
+
     // activity log
     public function activityLogInLogOut()
     {
@@ -162,6 +165,8 @@ class UserManagementController extends Controller
         DB::table('user_activity_logs')->insert($activityLog);
         User::where('id',$request->id)->update($update);
         Toastr::success('User updated successfully :)','Success');
+
+
         return redirect()->route('userManagement');
     }
     // delete

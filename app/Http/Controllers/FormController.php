@@ -5,26 +5,43 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\Staff;
+use Carbon\Carbon;
 use App\Models\User;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use DB;
+use Auth;
 
 class FormController extends Controller
 {
     // view form
     public function index()
-    {
-        return view('form.form');
+    {   
+        if (Auth::check() && Auth::user()->role_name == 'Admin') {
+            $data = DB::table('users')->get();
+            return view('form.form',compact('data'));
+        }
+        else
+        {
+            return redirect()->route('home');
+        }
+        
+    }
+    
+    //user activity logs 
+
+    public function staffActivityLog() {
+        $staffactivityLog = DB::table('staff_activity_logs')->get();
+        return view('usermanagement.staff_activity_log', compact('staffactivityLog'));
     }
 
-    // view record
+    // Employee detail 
     public function viewRecord()
     {
         $data = DB::table('staff')->get();
         return view('view_record.viewrecord',compact('data'));
     }
 
-    // view detail
+    // Employee detail
     public function viewDetail($id)
     {
         $data = DB::table('staff')->where('id',$id)->get();
@@ -45,6 +62,9 @@ class FormController extends Controller
             $position     = $request->position;
             $department   = $request->department;
             $salary       = $request->salary;
+            
+            $dt       = Carbon::now();
+            $todayDate = $dt->toDayDateTimeString();
 
             $update = [
 
@@ -58,6 +78,23 @@ class FormController extends Controller
                 'department'    => $department,
                 'salary'        => $salary,
             ];
+            $loggedInUser = Auth::check() ? Auth::user() : null;
+
+            $staffactivityLog = [
+                'user_name' => $loggedInUser ? $loggedInUser->name : null, 
+                'staff_name'    => $fullName,
+                'sex'           => $sex,
+                'email_address' => $emailAddress,
+                'phone_number'  => $phone_number,
+                'position'      => $position,
+                'department'    => $department,
+                'salary'        => $salary,
+                'modify_user'  => 'Update',
+                'date_time'    => $todayDate,
+            ];
+          
+            DB::table('staff_activity_logs')->insert($staffactivityLog);
+         
             Staff::where('id',$request->id)->update($update);
             Toastr::success('Data updated successfully :)','Success');
             return redirect()->route('form/view/detail');
@@ -98,9 +135,28 @@ class FormController extends Controller
             $Staff->department    = $department;
             $Staff->salary        = $salary;
             $Staff->save();
+            
+            $loggedInUser = Auth::check() ? Auth::user() : null;
+            
+            $dt       = Carbon::now();
+            $todayDate = $dt->toDayDateTimeString();
 
+
+            $staffactivityLog = [
+                'user_name'     => $loggedInUser ? $loggedInUser->name : null,
+                'staff_name'    => $request->fullName,
+                'sex'           => $request->sex,
+                'email_address' => $request->emailAddress,
+                'phone_number'  => $request->phone_number,
+                'position'      => $request->position,
+                'department'    => $request->department,
+                'salary'        => $request->salary,
+                'modify_user'   => 'Create',
+                'date_time'     => $todayDate,
+            ];
+            DB::table('staff_activity_logs')->insert($staffactivityLog);
             Toastr::success('Data added successfully :)','Success');
-            return redirect()->back();
+            return redirect()->route('form/view/detail');
 
         }catch(\Exception $e){
 
@@ -111,9 +167,31 @@ class FormController extends Controller
 
     // view delete
     public function viewDelete($id)
-    {
+    {    
         $delete = Staff::find($id);
         $delete->delete();
+
+        $loggedInUser = Auth::check() ? Auth::user() : null;
+        
+        $dt       = Carbon::now();
+        $todayDate = $dt->toDayDateTimeString();
+
+
+        $staffactivityLog = [
+            'user_name'     => $loggedInUser ? $loggedInUser->name : null,
+            'staff_name'    => $delete->full_name,
+            'sex'           => $delete->sex,
+            'email_address' => $delete->email_address,
+            'phone_number'  => $delete->phone_number,
+            'position'      => $delete->position,
+            'department'    => $delete->department,
+            'salary'        => $delete->salary,
+            'modify_user'   => 'Delete',
+            'date_time'     =>  $todayDate,
+        ];
+
+        DB::table('staff_activity_logs')->insert($staffactivityLog);
+
         Toastr::success('Data deleted successfully :)','Success');
         return redirect()->route('form/view/detail');
     }
