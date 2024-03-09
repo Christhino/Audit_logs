@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>Staff Activity Audit</h3>
-                    <p class="text-subtitle text-muted">For user audit in staff list</p>
+                    <p class="text-subtitle text-muted">For user audit trigger in staff list</p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
                     <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -36,15 +36,12 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>User Audit name </th>
+                                <th>A jour par</th>
                                 <th>Staff name</th>
-                                <th>Sex</th>
-                                <th>Email address	</th>
-                                <th>Phone number</th>
-                                <th>Department</th>
-                                <th>Salary</th>
+                                <th>staff Department</th>
+                                <th>staff Salary</th>
                                 <th>Modify</th>
-                                <th>Date Time</th>
+                                <th>Date de changement</th>
                             </tr>    
                         </thead>
                         <tbody>
@@ -53,9 +50,6 @@
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $item->user_name }}</td>
                                     <td>{{ $item->staff_name }}</td>
-                                    <td>{{ $item->email_address }}</td>
-                                    <td>{{ $item->phone_number }}</td>
-                                    <td>{{ $item->position }}</td>
                                     <td>{{ $item->department }}</td>
                                     <td>{{ $item->salary }}</td>
                                     <td>{{ $item->modify_user }}</td>
